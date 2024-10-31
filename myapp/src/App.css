@@ -1,0 +1,87 @@
+/* App.css */
+
+.game-board {
+  text-align: center;
+}
+
+.letter-display {
+  position: relative;
+  width: 200px; /* Adjust size as needed */
+  height: 200px; /* Adjust size as needed */
+  margin: 20px auto;
+}
+
+.letter {
+  position: absolute;
+  width: 40px; /* Size of the letters */
+  height: 40px; /* Size of the letters */
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: lightgray;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.letter.selected {
+  background-color: yellow; /* Highlight selected letters */
+}
+
+.letter-display .letter:nth-child(1) { /* Center letter */
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: blue; /* Color for the center letter */
+  color: white;
+  border-radius: 10%; /* Hexagon effect */
+}
+
+.letter-display .letter:nth-child(2) {
+  left: 20%; /* Position the letters around the center */
+  top: 10%;
+}
+
+.letter-display .letter:nth-child(3) {
+  left: 80%;
+  top: 10%;
+}
+
+.letter-display .letter:nth-child(4) {
+  left: 10%;
+  top: 50%;
+}
+
+.letter-display .letter:nth-child(5) {
+  left: 90%;
+  top: 50%;
+}
+
+.letter-display .letter:nth-child(6) {
+  left: 20%;
+  top: 90%;
+}
+
+.letter-display .letter:nth-child(7) {
+  left: 80%;
+  top: 90%;
+}
+
+/* Add any other global styles you need for the app */
+.selected-letters {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.selected-letters-display {
+  display: center;
+  gap: 10px; /* Space between letters */
+}
+
+.selected-letter {
+  padding: 10px;
+  border: 2px solid blue; /* Border to represent selected letters */
+  border-radius: 5px;
+  background-color: lightblue; /* Background color */
+  font-weight: bold; /* Make it stand out */
+}

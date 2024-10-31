@@ -1,0 +1,24 @@
+.App {
+  text-align: center;
+}
+
+.letter-board {
+  display: flex;
+  gap: 10px;
+}
+
+.letter-button {
+  font-size: 1.5rem;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.stats-modal {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -20%);
+  background-color: white;
+  padding: 20px;
+  border: 1px solid black;
+}
