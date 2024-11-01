@@ -42,7 +42,6 @@ function filterWordsByLetters(words, startingLetter, selectedLetters) {
     console.log("Filtered words after letter check:", filteredWords.length);
     return filteredWords;
 }
-
 async function getDailyLetters() {
     try {
         console.log("Loading word list...");
@@ -58,7 +57,7 @@ async function getDailyLetters() {
         let dailyLetters, validWords, attempts = 0;
         const maxAttempts = 50; // Allow up to 50 attempts
 
-        do {
+        while (attempts < maxAttempts) {
             const { startingLetter, selectedLetters } = selectLetters();
             dailyLetters = selectedLetters;
 
@@ -66,22 +65,21 @@ async function getDailyLetters() {
             validWords = filterWordsByLetters(words, startingLetter, selectedLetters);
             attempts++;
 
-            // If more than 30 valid words, continue to select new letters
+            // Check if validWords are within the desired range
+            if (validWords.length >= 5 && validWords.length <= 30) {
+                console.log("Final letters:", dailyLetters);
+                console.log("Valid words:", validWords);
+                return { letters: dailyLetters, words: validWords };
+            } 
+
+            // Log if the selection had too many valid words
             if (validWords.length > 30) {
                 console.log("More than 30 valid words, selecting new letters...");
-                continue; // Skip to select new letters
             }
+        }
 
-            // Check if validWords is less than 5 after filtering
-            if (validWords.length < 5 && attempts >= maxAttempts) {
-                throw new Error("Daniel fucket opp noe, du får sende han en melding, hilsen Daniel");
-            }
-
-        } while (validWords.length < 5 && attempts < maxAttempts);
-
-        console.log("Final letters:", dailyLetters);
-        console.log("Valid words:", validWords);
-        return { letters: dailyLetters, words: validWords };
+        // If max attempts reached and no suitable list found, throw error
+        throw new Error("Daniel fucket opp noe, du får sende han en melding, hilsen Daniel");
 
     } catch (error) {
         console.error("Error in getDailyLetters:", error);
