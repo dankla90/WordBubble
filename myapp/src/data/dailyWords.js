@@ -67,8 +67,6 @@ async function getDailyLetters() {
 
             // Check if validWords are within the desired range
             if (validWords.length >= 5 && validWords.length <= 30) {
-                console.log("Final letters:", dailyLetters);
-                console.log("Valid words:", validWords);
                 return { letters: dailyLetters, words: validWords };
             } 
 
@@ -76,6 +74,7 @@ async function getDailyLetters() {
             if (validWords.length > 30) {
                 console.log("More than 30 valid words, selecting new letters...");
             }
+            console.log("Final letters:", dailyLetters);
         }
 
         // If max attempts reached and no suitable list found, throw error

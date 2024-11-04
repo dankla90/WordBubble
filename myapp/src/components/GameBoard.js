@@ -1,6 +1,6 @@
+// src/components/GameBoard.js
 import React, { useState, useEffect } from 'react';
-import getDailyLetters from '../data/dailyWords';
-import '../App.css'; // Make sure this CSS file has styles for your components
+import '../App.css';
 
 function Letter({ letter, isSelected, onClick }) {
     return (
@@ -13,26 +13,17 @@ function Letter({ letter, isSelected, onClick }) {
     );
 }
 
-function GameBoard({ onGameEnd }) {
-    const [letters, setLetters] = useState([]);
-    const [possibleWords, setPossibleWords] = useState([]);
+function GameBoard({ onGameEnd, possibleWords, letters }) {
     const [guessedWords, setGuessedWords] = useState([]);
     const [hasGivenUp, setHasGivenUp] = useState(false);
     const [selectedLetters, setSelectedLetters] = useState([letters[0] || '']);
-    
+
     useEffect(() => {
-        async function fetchGameData() {
-            const { letters, words } = await getDailyLetters();
-            setLetters(letters);
-            setPossibleWords(words);
-            setSelectedLetters([letters[0]]); // Start with the first letter selected
-        }
-        fetchGameData();
-    }, []);
+        setSelectedLetters([letters[0]]); // Start with the first letter selected
+    }, [letters]);
 
     const addToGuessedWords = (guess) => {
         setGuessedWords([...guessedWords, guess]);
-        setPossibleWords(possibleWords.filter(word => word !== guess)); // Remove from possible words
         setSelectedLetters([letters[0]]); // Reset selection to only the first letter
     };
 
@@ -42,15 +33,15 @@ function GameBoard({ onGameEnd }) {
     };
 
     const handleLetterClick = (letter) => {
-        if (hasGivenUp) return; // Prevent further input if the game has ended
-        
+        if (hasGivenUp) return;
+
         const newSelected = [...selectedLetters, letter];
         setSelectedLetters(newSelected);
         
         const newGuess = newSelected.join('');
-        if (possibleWords.includes(newGuess) && !guessedWords.includes(newGuess) && newGuess.length > 0) {
+        if (possibleWords.includes(newGuess) && !guessedWords.includes(newGuess)) {
             addToGuessedWords(newGuess);
-            if (guessedWords.length + 1 === possibleWords.length) handleGiveUp(); // End game if all words are guessed
+            if (guessedWords.length + 1 === possibleWords.length) handleGiveUp();
         }
     };
 
