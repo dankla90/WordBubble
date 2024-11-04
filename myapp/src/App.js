@@ -1,5 +1,3 @@
-// src/App.js
-
 import React, { useState, useEffect } from 'react';
 import GameBoard from './components/GameBoard';
 import ScoreBox from './components/ScoreBox';
@@ -16,7 +14,7 @@ function App() {
         setScore(finalScore);
         setCookie("lastScore", finalScore, 1);
     };
-
+    
     useEffect(() => {
         async function fetchGameData() {
             try {
