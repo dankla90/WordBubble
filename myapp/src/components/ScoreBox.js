@@ -1,8 +1,7 @@
-// src/components/ScoreBox.js
 import React, { useState } from 'react';
 import { setCookie } from '../utils/cookies';
 
-function ScoreBox({ score, totalWords, playerName, setPlayerName }) {
+function ScoreBox({ score, totalWords, playerName, setPlayerName, scoreHistory }) {
     const [nameInput, setNameInput] = useState(playerName);
     const [isNameSaved, setIsNameSaved] = useState(!!playerName);
 
@@ -41,6 +40,22 @@ function ScoreBox({ score, totalWords, playerName, setPlayerName }) {
                 </div>
             )}
             <h4>{displayMessage()}</h4>
+
+            <h3>Score History</h3>
+            <ul>
+                {scoreHistory.map((entry, index) => {
+                    console.log("Score History Data:", scoreHistory);
+
+                    // Check if entry is valid and contains required properties
+                    if (entry && entry.date && entry.score !== undefined && entry.total !== undefined) {
+                        return (
+                            <li key={index}>{`${entry.date}: ${entry.score} / ${entry.total}`}</li>
+                        );
+                    } else {
+                        return <li key={index}>Invalid entry</li>; // Or you can skip rendering
+                    }
+                })}
+            </ul>
         </div>
     );
 }

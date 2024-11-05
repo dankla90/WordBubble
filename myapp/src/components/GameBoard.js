@@ -1,30 +1,33 @@
-// src/components/GameBoard.js
 import React, { useState, useEffect } from 'react';
 import '../App.css';
 
-function Letter({ letter, isSelected, onClick }) {
+function Letter({ letter, isSelected, onClick, isDisabled }) {
     return (
         <div
             className={`letter ${isSelected ? 'selected' : ''}`}
-            onClick={() => onClick(letter)}
+            onClick={() => !isDisabled && onClick(letter)} // Disable click if isDisabled
+            style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }} // Change cursor
         >
             {letter}
         </div>
     );
 }
 
-function GameBoard({ onGameEnd, possibleWords, letters }) {
+function GameBoard({ onGameEnd, possibleWords = [], letters = [], isDisabled }) {
     const [guessedWords, setGuessedWords] = useState([]);
     const [hasGivenUp, setHasGivenUp] = useState(false);
-    const [selectedLetters, setSelectedLetters] = useState([letters[0] || '']);
+    const [selectedLetters, setSelectedLetters] = useState([]);
 
+    // Ensure letters is not empty before accessing its elements
     useEffect(() => {
-        setSelectedLetters([letters[0]]); // Start with the first letter selected
+        if (letters.length > 0) {
+            setSelectedLetters([letters[0]]); // Start with the first letter selected
+        }
     }, [letters]);
 
     const addToGuessedWords = (guess) => {
         setGuessedWords([...guessedWords, guess]);
-        setSelectedLetters([letters[0]]); // Reset selection to only the first letter
+        if (letters.length > 0) setSelectedLetters([letters[0]]); // Reset selection
     };
 
     const handleGiveUp = () => {
@@ -33,11 +36,11 @@ function GameBoard({ onGameEnd, possibleWords, letters }) {
     };
 
     const handleLetterClick = (letter) => {
-        if (hasGivenUp) return;
+        if (hasGivenUp || isDisabled) return; // Prevent actions if disabled
 
         const newSelected = [...selectedLetters, letter];
         setSelectedLetters(newSelected);
-        
+
         const newGuess = newSelected.join('');
         if (possibleWords.includes(newGuess) && !guessedWords.includes(newGuess)) {
             addToGuessedWords(newGuess);
@@ -46,7 +49,7 @@ function GameBoard({ onGameEnd, possibleWords, letters }) {
     };
 
     const handleUnselectAll = () => {
-        setSelectedLetters([letters[0]]);
+        if (letters.length > 0) setSelectedLetters([letters[0]]);
     };
 
     return (
@@ -60,6 +63,7 @@ function GameBoard({ onGameEnd, possibleWords, letters }) {
                         letter={letter}
                         isSelected={selectedLetters.includes(letter)}
                         onClick={handleLetterClick}
+                        isDisabled={isDisabled} // Pass disabled prop
                     />
                 ))}
             </div>
@@ -77,8 +81,8 @@ function GameBoard({ onGameEnd, possibleWords, letters }) {
 
             <div>Total possible words: {possibleWords.length}</div>
 
-            <button onClick={handleGiveUp} disabled={hasGivenUp}>Give Up</button>
-            <button onClick={handleUnselectAll} disabled={hasGivenUp}>Unselect All</button>
+            <button onClick={handleGiveUp} disabled={hasGivenUp || isDisabled}>Give Up</button>
+            <button onClick={handleUnselectAll} disabled={hasGivenUp || isDisabled}>Unselect All</button>
 
             <div>
                 <h3>Guessed Words</h3>
@@ -89,7 +93,8 @@ function GameBoard({ onGameEnd, possibleWords, letters }) {
 
             <div>
                 <h3>Word List</h3>
-                {hasGivenUp ? (
+                {/* Display possible words regardless of game status */}
+                {hasGivenUp || isDisabled ? (
                     <div>
                         <h4>All possible words:</h4>
                         {possibleWords.map((word, index) => (

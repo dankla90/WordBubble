@@ -12,18 +12,16 @@ async function getDailyLetters() {
         const words = text.split("\n").map(word => word.trim()).filter(word => word.length > 3);
         console.log("Total words loaded:", words.length);
 
-        let dailyLetters, validWords, attempts = 0;
+        let attempts = 0;
         const maxAttempts = 50;
 
         while (attempts < maxAttempts) {
-            const { startingLetter, selectedLetters } = selectLetters();
-            dailyLetters = selectedLetters;
-            validWords = filterWordsByLetters(words, startingLetter, selectedLetters);
+            const { startingLetter, selectedLetters } = selectUniqueLetters();
+            const validWords = filterWordsByLetters(words, startingLetter, selectedLetters);
             attempts++;
 
-            // Ensure validWords is defined and is an array
-            if (Array.isArray(validWords) && validWords.length >= 5 && validWords.length <= 30) {
-                return { letters: dailyLetters, words: validWords };
+            if (validWords.length >= 5 && validWords.length <= 30) {
+                return { letters: selectedLetters, words: validWords };
             }
 
             if (validWords.length > 30) {
@@ -39,29 +37,24 @@ async function getDailyLetters() {
     }
 }
 
-function selectLetters() {
+function selectUniqueLetters() {
     const alphabet = "abcdefghijklmnopqrstuvwxyz".split('');
     const startingLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
     
-    // Randomly select 6 letters from the alphabet
-    const selectedLetters = [startingLetter, ...new Set(Array.from({length: 5}, () => 
-        alphabet[Math.floor(Math.random() * alphabet.length)]))];
+    const selectedLetters = new Set([startingLetter]);
+    while (selectedLetters.size < 7) {
+        selectedLetters.add(alphabet[Math.floor(Math.random() * alphabet.length)]);
+    }
 
-    return { startingLetter, selectedLetters };
+    return { startingLetter, selectedLetters: Array.from(selectedLetters) };
 }
 
 function filterWordsByLetters(words, startingLetter, selectedLetters) {
     const selectedLettersSet = new Set(selectedLetters);
-    return words.filter(word => {
-        // Check if the word starts with the required starting letter
-        if (word[0] !== startingLetter) return false;
-
-        // Check if each letter in the word is within the selected letters
-        for (let letter of word) {
-            if (!selectedLettersSet.has(letter)) return false;
-        }
-        return true;
-    });
+    return words.filter(word => 
+        word[0] === startingLetter &&
+        [...word].every(letter => selectedLettersSet.has(letter))
+    );
 }
 
 module.exports = getDailyLetters;
