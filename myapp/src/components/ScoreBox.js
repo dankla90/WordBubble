@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { setCookie } from '../utils/cookies';
 
-function ScoreBox({ score, totalWords, playerName, setPlayerName, scoreHistory }) {
+function ScoreBox({ score, totalWords, playerName, scoreHistory, setPlayerName, isGameFinished }) {
     const [nameInput, setNameInput] = useState(playerName);
     const [isNameSaved, setIsNameSaved] = useState(!!playerName);
 
@@ -10,16 +9,21 @@ function ScoreBox({ score, totalWords, playerName, setPlayerName, scoreHistory }
     };
 
     const saveName = () => {
-        setPlayerName(nameInput);
-        setCookie("playerName", nameInput, 1);
+        setPlayerName(nameInput); // Update player name and save it in cookies
         setIsNameSaved(true);
+    };
+
+    const handleChangeName = () => {
+        setIsNameSaved(false); // Allow the user to change the name
     };
 
     const displayMessage = () => {
         if (score === totalWords) {
             return `Kjempeflott, du klarte alle ${totalWords} ord!`;
-        } else {
+        } else if (score > 0) {
             return `Du klarte ${score} av ${totalWords} mulige ord.`;
+        } else {
+            return `Se hvor mange du klarer!`;
         }
     };
 
@@ -43,19 +47,17 @@ function ScoreBox({ score, totalWords, playerName, setPlayerName, scoreHistory }
 
             <h3>Score History</h3>
             <ul>
-                {scoreHistory.map((entry, index) => {
-                    console.log("Score History Data:", scoreHistory);
-
-                    // Check if entry is valid and contains required properties
-                    if (entry && entry.date && entry.score !== undefined && entry.total !== undefined) {
-                        return (
-                            <li key={index}>{`${entry.date}: ${entry.score} / ${entry.total}`}</li>
-                        );
-                    } else {
-                        return <li key={index}>Invalid entry</li>; // Or you can skip rendering
-                    }
-                })}
+                {scoreHistory.map((entry, index) => (
+                    <li key={index}>
+                        {entry.playerName}: {entry.date}, score: {entry.score}, total: {entry.total}
+                    </li>
+                ))}
             </ul>
+
+            {/* Show 'Change Name' button if the name is saved */}
+            {isNameSaved && !isGameFinished && (
+                <button onClick={handleChangeName}>Change Name</button>
+            )}
         </div>
     );
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import GameBoard from './components/GameBoard';
 import ScoreBox from './components/ScoreBox';
-import './index.css';
+import './App.css';
 
 // Function to get a cookie by name
 const getCookie = (name) => {
@@ -15,6 +15,15 @@ const setCookie = (name, value, days) => {
     document.cookie = `${name}=${value}; expires=${expires}; path=/`;
 };
 
+// Function to clear all cookies
+const clearCookies = () => {
+    document.cookie.split(";").forEach((cookie) => {
+        const cookieName = cookie.split("=")[0].trim();
+        document.cookie = `${cookieName}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
+    });
+    alert("All cookies cleared.");
+};
+
 // Function to retrieve score history from cookies
 const getScoreHistory = () => {
     const history = getCookie("scoreHistory");
@@ -24,31 +33,53 @@ const getScoreHistory = () => {
 function App() {
     const [score, setScore] = useState(0);
     const [totalWords, setTotalWords] = useState(0);
-    const [playerName, setPlayerName] = useState(getCookie("playerName") || "");
-    const [gameWords, setGameWords] = useState([]); // Stores the words for the current game session
-    const [gameLetters, setGameLetters] = useState([]); // Stores the letters for the current game session
+    const [playerName, setPlayerName] = useState(getCookie("playerName") || ""); // Get player name from cookies
+    const [gameWords, setGameWords] = useState([]);
+    const [gameLetters, setGameLetters] = useState([]);
     const [loading, setLoading] = useState(true);
     const [scoreHistory, setScoreHistory] = useState(getScoreHistory() || []); // Load score history from cookies
+    const [hasPlayedToday, setHasPlayedToday] = useState(false); // Track if the player has played today
+    const [isGameFinished, setIsGameFinished] = useState(false); // Track if the game is finished (like if "Give Up" was pressed)
+
+    // Check if player has already played today
+    useEffect(() => {
+        const today = new Date().toLocaleDateString("no-NO"); // Get today's date
+        const todayScore = scoreHistory.find(entry => entry.date.trim() === today);
+
+        if (todayScore) {
+            setHasPlayedToday(true); // Set flag to true if player has played today
+        }
+    }, [scoreHistory]);
 
     const updateScoreHistory = (finalScore) => {
-        const today = new Date().toLocaleDateString("no-NO"); // Format the date
-        const newEntry = `${today} ${finalScore} av ${totalWords}`;
-        let updatedHistory = [...scoreHistory, newEntry];
+        const today = new Date().toLocaleDateString("no-NO"); // Get today's date
+        const newEntry = {
+            playerName: playerName,
+            date: today,
+            score: finalScore,
+            total: totalWords
+        };
 
-        // Limit the history to the last 10 entries
+        let updatedHistory = [...scoreHistory, newEntry];
         if (updatedHistory.length > 10) {
             updatedHistory = updatedHistory.slice(updatedHistory.length - 10);
         }
-        console.log('Score History:', scoreHistory);
 
         setScoreHistory(updatedHistory);
-        setCookie("scoreHistory", JSON.stringify(updatedHistory), 1); // Save updated history to cookies
+        setCookie("scoreHistory", JSON.stringify(updatedHistory), 1);
     };
 
     const handleGameEnd = (finalScore) => {
         setScore(finalScore);
         setCookie("lastScore", finalScore, 1);
-        updateScoreHistory(finalScore); // Update score history
+        updateScoreHistory(finalScore);
+        setIsGameFinished(true);
+    };
+
+    // Function to update the player name and save it in cookies
+    const handlePlayerNameChange = (newName) => {
+        setPlayerName(newName);
+        setCookie("playerName", newName, 30); // Save name to cookies for 30 days
     };
 
     useEffect(() => {
@@ -58,9 +89,9 @@ function App() {
                 if (!response.ok) throw new Error("Failed to load puzzle data.");
 
                 const { letters, words } = await response.json();
-                setGameLetters(letters); // Set letters for the game
-                setGameWords(words);     // Set words for the game
-                setTotalWords(words.length); // Set totalWords based on the words array
+                setGameLetters(letters);
+                setGameWords(words);
+                setTotalWords(words.length);
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching daily puzzle data:", error);
@@ -75,14 +106,23 @@ function App() {
     return (
         <div className="App">
             <h1>Helenes Spill</h1>
-            <ScoreBox 
-                score={score} 
-                totalWords={totalWords} 
-                playerName={playerName} 
-                setPlayerName={setPlayerName} 
-                scoreHistory={scoreHistory} // Pass score history to ScoreBox
-            />
-            <GameBoard onGameEnd={handleGameEnd} possibleWords={gameWords} letters={gameLetters} />
+            <div className="game-container">
+                <ScoreBox
+                    score={score}
+                    totalWords={totalWords}
+                    playerName={playerName}
+                    setPlayerName={handlePlayerNameChange}
+                    scoreHistory={scoreHistory}
+                    isGameFinished={isGameFinished || hasPlayedToday} // Pass game finished state
+                />
+                <GameBoard
+                    onGameEnd={handleGameEnd}
+                    possibleWords={gameWords}
+                    letters={gameLetters}
+                    isGameFinished={isGameFinished || hasPlayedToday} // Disable game interaction if finished or played today
+                />
+            </div>
+            <button onClick={clearCookies}>Clear Cookies</button> {/* Clear Cookies button */}
         </div>
     );
 }

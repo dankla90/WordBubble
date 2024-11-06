@@ -1,9 +1,28 @@
-/* App.css */
-
-.game-board {
-  text-align: center;
+/* App background and basic reset */
+body {
+  background-color: #d0e7ff;
+  margin: 0;
+  font-family: Arial, sans-serif;
 }
 
+/* Main container styling */
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* Container for the game and score, set flex direction here */
+.game-container {
+  display: flex;
+  flex-direction: column; /* Stack vertically by default for mobile */
+  width: 100%;
+}
+
+/* Letter display layout for hexagon effect */
 .letter-display {
   position: relative;
   width: 200px; /* Adjust size as needed */
@@ -11,6 +30,7 @@
   margin: 20px auto;
 }
 
+/* Letter styling */
 .letter {
   position: absolute;
   width: 40px; /* Size of the letters */
@@ -28,7 +48,8 @@
   background-color: yellow; /* Highlight selected letters */
 }
 
-.letter-display .letter:nth-child(1) { /* Center letter */
+/* Positioning each letter to form a hexagon around the center */
+.letter:nth-child(1) { /* Center letter */
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -37,44 +58,56 @@
   border-radius: 10%; /* Hexagon effect */
 }
 
-.letter-display .letter:nth-child(2) {
-  left: 20%; /* Position the letters around the center */
-  top: 10%;
+.letter:nth-child(2) { /* Top left */
+  top: 20%;
+  left: 25%;
+  transform: translate(-50%, -50%);
 }
 
-.letter-display .letter:nth-child(3) {
-  left: 80%;
-  top: 10%;
+.letter:nth-child(3) { /* Top right */
+  top: 20%;
+  left: 75%;
+  transform: translate(-50%, -50%);
 }
 
-.letter-display .letter:nth-child(4) {
-  left: 10%;
+.letter:nth-child(4) { /* Right */
   top: 50%;
-}
-
-.letter-display .letter:nth-child(5) {
   left: 90%;
+  transform: translate(-50%, -50%);
+}
+
+.letter:nth-child(5) { /* Bottom right */
+  top: 80%;
+  left: 75%;
+  transform: translate(-50%, -50%);
+}
+
+.letter:nth-child(6) { /* Bottom left */
+  top: 80%;
+  left: 25%;
+  transform: translate(-50%, -50%);
+}
+
+.letter:nth-child(7) { /* Left */
   top: 50%;
+  left: 10%;
+  transform: translate(-50%, -50%);
 }
 
-.letter-display .letter:nth-child(6) {
-  left: 20%;
-  top: 90%;
+/* Game board styling */
+.game-board {
+  text-align: center;
 }
 
-.letter-display .letter:nth-child(7) {
-  left: 80%;
-  top: 90%;
-}
-
-/* Add any other global styles you need for the app */
+/* Selected letters display */
 .selected-letters {
   margin-top: 20px;
   margin-bottom: 20px;
 }
 
 .selected-letters-display {
-  display: center;
+  display: flex;
+  justify-content: center;
   gap: 10px; /* Space between letters */
 }
 
@@ -84,4 +117,82 @@
   border-radius: 5px;
   background-color: lightblue; /* Background color */
   font-weight: bold; /* Make it stand out */
+}
+
+/* Guessed Words section styling */
+.guessed-words {
+  margin-top: 20px;
+  text-align: center;
+  /* Additional styling for "Guessed Words" if needed */
+}
+
+/* Word List section styling */
+.word-list {
+  margin-top: 20px;
+  text-align: center;
+  /* Additional styling for "Word List" if needed */
+}
+
+/* Responsive design */
+
+/* Desktop screens - Adjust layout to row */
+@media (min-width: 768px) {
+  .game-container {
+    flex-direction: row; /* Stack horizontally on desktop */
+    justify-content: space-between;
+  }
+
+  .score-box {
+    flex: 1;
+    max-width: 300px;
+    margin-right: 20px;
+  }
+
+  .game-board {
+    flex: 3;
+    max-width: 600px; /* Set a max-width for the game board */
+    margin-right: 20px;
+  }
+
+  .guessed-words {
+    flex: 1;
+    max-width: 300px;
+    margin-left: 20px;
+    text-align: left;
+  }
+
+  .word-list {
+    flex: 1;
+    max-width: 300px;
+    margin-left: 20px;
+    text-align: left;
+  }
+}
+
+/* Mobile - Stack sections vertically */
+@media (max-width: 767px) {
+  .game-container {
+    flex-direction: column; /* Stack items vertically on mobile */
+    align-items: center; /* Center the content */
+  }
+
+  .score-box {
+    width: 100%;
+    max-width: 300px; /* Set a max width to avoid excessive stretching */
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  .game-board {
+    width: 100%;
+    max-width: 100%; /* Take up full width */
+    margin-top: 20px;
+    text-align: center; /* Center text */
+  }
+
+  .guessed-words, .word-list {
+    width: 100%; /* Full width */
+    text-align: center;
+    margin-top: 20px; /* Space out sections */
+  }
 }
