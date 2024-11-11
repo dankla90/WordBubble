@@ -29,13 +29,6 @@ function GameBoard({ onGameEnd, possibleWords = [], letters = [], isGameFinished
     const [hasGivenUp, setHasGivenUp] = useState(false);
     const [hasPlayedToday, setHasPlayedToday] = useState(false);
 
-    // Ensure letters is not empty before accessing its elements
-    useEffect(() => {
-        if (letters.length > 0) {
-            setSelectedLetters([letters[0]]); // Start with the first letter selected
-        }
-    }, [letters]);
-
     // Check if the game has been played today using cookies
     useEffect(() => {
         const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
@@ -50,7 +43,7 @@ function GameBoard({ onGameEnd, possibleWords = [], letters = [], isGameFinished
 
     const addToGuessedWords = (guess) => {
         addGuessedWord(guess); // Use prop function to update guessed words in parent
-        setSelectedLetters([letters[0]]); // Reset selection
+        setSelectedLetters([]); // Reset selection
     };
 
     const handleGiveUp = () => {
@@ -62,18 +55,31 @@ function GameBoard({ onGameEnd, possibleWords = [], letters = [], isGameFinished
     const handleLetterClick = (letter) => {
         if (hasGivenUp || isGameFinished || hasPlayedToday) return; // Prevent actions if disabled or game played today
 
+        // Add the clicked letter to the selected letters
         const newSelected = [...selectedLetters, letter];
         setSelectedLetters(newSelected);
 
         const newGuess = newSelected.join('');
-        if (possibleWords.includes(newGuess) && !guessedWords.includes(newGuess)) {
+        
+        // Ensure the guess contains the center letter and matches the rules
+        if (newGuess.includes(letters[0]) && possibleWords.includes(newGuess) && !guessedWords.includes(newGuess)) {
             addToGuessedWords(newGuess);
             if (guessedWords.length + 1 === possibleWords.length) handleGiveUp();
         }
     };
 
     const handleUnselectAll = () => {
-        if (letters.length > 0) setSelectedLetters([letters[0]]);
+        setSelectedLetters([]); // Unselect all letters
+    };
+
+    // Undo the last selected letter
+    const handleUndoLetter = () => {
+        setSelectedLetters((prevSelectedLetters) => {
+            // Remove the last selected letter
+            const updatedLetters = [...prevSelectedLetters];
+            updatedLetters.pop();
+            return updatedLetters;
+        });
     };
 
     return (
@@ -106,6 +112,7 @@ function GameBoard({ onGameEnd, possibleWords = [], letters = [], isGameFinished
 
             <button onClick={handleGiveUp} disabled={hasGivenUp || isGameFinished || hasPlayedToday}>Gi opp</button>
             <button onClick={handleUnselectAll} disabled={hasGivenUp || isGameFinished || hasPlayedToday}>nullstill valgte bokstaver</button>
+            <button onClick={handleUndoLetter} disabled={hasGivenUp || isGameFinished || hasPlayedToday || selectedLetters.length === 0}>Angre bokstav</button>
         </div>
     );
 }

@@ -24,8 +24,8 @@ async function getDailyLetters() {
                 return { letters: selectedLetters, words: validWords };
             }
 
-            if (validWords.length > 30) {
-                console.log("More than 30 valid words, selecting new letters...");
+            if (validWords.length > 40) {
+                console.log("More than 40 valid words, selecting new letters...");
             }
         }
 
@@ -51,8 +51,11 @@ function selectUniqueLetters() {
 
 function filterWordsByLetters(words, startingLetter, selectedLetters) {
     const selectedLettersSet = new Set(selectedLetters);
+    
     return words.filter(word => 
-        word[0] === startingLetter &&
+        // Ensure the word contains the starting letter
+        word.includes(startingLetter) && 
+        // Ensure every letter in the word is from the selected set of letters
         [...word].every(letter => selectedLettersSet.has(letter))
     );
 }
