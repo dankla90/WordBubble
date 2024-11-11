@@ -2,7 +2,7 @@ name: Generate Daily Puzzle and Deploy
 
 on:
   schedule:
-    - cron: "33 16 * * *"  # Runs every day at midnight UTC
+    - cron: "* * * * *"  # Runs every day at midnight UTC
 
 jobs:
   generate-and-deploy:
