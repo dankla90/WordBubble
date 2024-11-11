@@ -2,7 +2,7 @@ name: Generate Daily Puzzle and Deploy
 
 on:
   schedule:
-    - cron: "* * * * *"  # Runs every day at midnight UTC
+    - cron: "00 00 * * *"  # Runs every day at midnight UTC
 
 jobs:
   generate-and-deploy:
@@ -27,7 +27,7 @@ jobs:
         run: |
           git config --global user.name "dankla90"
           git config --global user.email "bassboom@hotmail.com"
-          git add myapp/public/daily-Letters.json  # Correct path to the generated file
+          git add myapp/public/dailyLetters.json  # Correct path to the generated file
           git commit -m "Update daily puzzle"
           git push
         env:
