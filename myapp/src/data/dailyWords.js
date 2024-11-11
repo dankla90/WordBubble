@@ -20,7 +20,7 @@ async function getDailyLetters() {
             const validWords = filterWordsByLetters(words, startingLetter, selectedLetters);
             attempts++;
 
-            if (validWords.length >= 5 && validWords.length <= 30) {
+            if (validWords.length >= 4 && validWords.length <= 30) {
                 return { letters: selectedLetters, words: validWords };
             }
 

@@ -18,7 +18,7 @@ jobs:
           node-version: '16' # Ensure compatibility with your environment
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Generate daily puzzle
         run: node myapp/scripts/generateDailyPuzzle.js  # Correct path to the script
@@ -35,6 +35,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build the project
+        cd: myapp/ 
         run: npm run build
 
       - name: Deploy to GitHub Pages
