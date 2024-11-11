@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/dankla90/WordBubble/static/css/main.a00f80e6.css",
+    "main.js": "/dankla90/WordBubble/static/js/main.5e1291fe.js",
+    "static/js/453.64512fd7.chunk.js": "/dankla90/WordBubble/static/js/453.64512fd7.chunk.js",
+    "index.html": "/dankla90/WordBubble/index.html",
+    "main.a00f80e6.css.map": "/dankla90/WordBubble/static/css/main.a00f80e6.css.map",
+    "main.5e1291fe.js.map": "/dankla90/WordBubble/static/js/main.5e1291fe.js.map",
+    "453.64512fd7.chunk.js.map": "/dankla90/WordBubble/static/js/453.64512fd7.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a00f80e6.css",
+    "static/js/main.5e1291fe.js"
+  ]
+}
