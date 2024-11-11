@@ -35,7 +35,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build the project
-        cd: myapp/ 
         run: npm run build
 
       - name: Deploy to GitHub Pages
