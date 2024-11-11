@@ -2,7 +2,7 @@ name: Generate Daily Puzzle and Deploy
 
 on:
   schedule:
-    - cron: "27 16 * * *"  # Runs every day at midnight UTC
+    - cron: "33 16 * * *"  # Runs every day at midnight UTC
 
 jobs:
   generate-and-deploy:
@@ -21,13 +21,13 @@ jobs:
         run: npm install
 
       - name: Generate daily puzzle
-        run: node scripts/generateDailyPuzzle.js
+        run: node myapp/scripts/generateDailyPuzzle.js  # Correct path to the script
 
       - name: Commit updated daily puzzle
         run: |
           git config --global user.name "dankla90"
           git config --global user.email "bassboom@hotmail.com"
-          git add public/dailyPuzzle.json
+          git add myapp/public/dailyPuzzle.json  # Correct path to the generated file
           git commit -m "Update daily puzzle"
           git push
         env:
@@ -40,4 +40,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build # The directory to publish to GitHub Pages
+          publish_dir: ./build # This path is fine as it refers to the build directory
