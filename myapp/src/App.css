@@ -133,6 +133,20 @@ body {
   /* Additional styling for "Word List" if needed */
 }
 
+.score-box h2 {
+  display: inline-block; /* Keeps the h2 in-line */
+  margin-right: 10px; /* Adjust the margin to create space between the heading and the button */
+}
+
+.close-btn {
+  display: inline-block; /* Ensures the button stays in-line with the heading */
+  margin-left: 10px; /* Adds some space between the score text and the button */
+  cursor: pointer; /* Optional: changes the cursor to indicate it's clickable */
+}
+
+
+
+
 /* Responsive design */
 
 /* Desktop screens - Adjust layout to row */
@@ -167,6 +181,11 @@ body {
     margin-left: 20px;
     text-align: left;
   }
+  .close-btn {
+    display: none; /* Completely hides the button */
+}
+
+
 }
 
 /* Mobile - Stack sections vertically */

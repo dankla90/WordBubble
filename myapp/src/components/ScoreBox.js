@@ -1,64 +1,80 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function ScoreBox({ score, totalWords, playerName, scoreHistory, setPlayerName, isGameFinished }) {
+    const [isMinimized, setIsMinimized] = useState(false); // Start minimized by default
     const [nameInput, setNameInput] = useState(playerName);
     const [isNameSaved, setIsNameSaved] = useState(!!playerName);
-
-    const handleNameChange = (e) => {
-        setNameInput(e.target.value);
-    };
-
+    const handleNameChange = (e) => setNameInput(e.target.value);
     const saveName = () => {
-        setPlayerName(nameInput); // Update player name and save it in cookies
+        setPlayerName(nameInput); 
         setIsNameSaved(true);
     };
 
-    const handleChangeName = () => {
-        setIsNameSaved(false); // Allow the user to change the name
-    };
+    const toggleScoreBox = () => setIsMinimized(!isMinimized);
 
     const displayMessage = () => {
-        if (score === totalWords) {
-            return `Kjempeflott, du klarte alle ${totalWords} ord!`;
-        } else if (score > 0) {
-            return `Du klarte ${score} av ${totalWords} mulige ord.`;
-        } else {
-            return `Se hvor mange du klarer!`;
-        }
+        if (score === totalWords) return `Kjempeflott, du klarte alle ${totalWords} ord!`;
+        if (score > 0) return `Du klarte ${score} av ${totalWords} mulige ord.`;
+        return `Se hvor mange du klarer!`;
     };
 
+    useEffect(() => {
+        // Run this only once on component mount
+        if (window.innerWidth < 768 && !isMinimized) {
+            toggleScoreBox();
+        }
+    }, []); 
+
+
+
     return (
-        <div className="score-box">
-            <h2>Score</h2>
-            {isNameSaved ? (
-                <h3>{nameInput}</h3>
-            ) : (
-                <div>
-                    <input
-                        type="text"
-                        value={nameInput}
-                        onChange={handleNameChange}
-                        placeholder="Skriv inn navnet ditt"
-                    />
-                    <button onClick={saveName}>Lagre Navn</button>
-                </div>
-            )}
-            <h4>{displayMessage()}</h4>
+        <>
+            <div 
+                className={`score-box ${isMinimized ? 'minimized' : 'expanded'}`} 
+                onClick={isMinimized ? toggleScoreBox : null} // Only toggle on minimized box
+            >
+                {isMinimized ? (
+                    <div className="minimized-content">
+                        <p>Klikk her for å se scores</p>
+                    </div>
+                ) : (
+                    <>
+                        <div className="score-box-header">
+                            <h2>Score</h2>
+                            <button className="close-btn" onClick={toggleScoreBox}>X</button>
+                        </div>
 
-            <h3>Score History</h3>
-            <ul>
-                {scoreHistory.map((entry, index) => (
-                    <li key={index}>
-                        {entry.playerName}: {entry.date}, score: {entry.score}, total: {entry.total}
-                    </li>
-                ))}
-            </ul>
+                        {isNameSaved ? (
+                            <h3>{nameInput}</h3>
+                        ) : (
+                            <div>
+                                <input
+                                    type="text"
+                                    value={nameInput}
+                                    onChange={handleNameChange}
+                                    placeholder="Skriv inn navnet ditt"
+                                />
+                                <button onClick={saveName}>Lagre Navn</button>
+                            </div>
+                        )}
+                        <h4>{displayMessage()}</h4>
 
-            {/* Show 'Change Name' button if the name is saved */}
-            {isNameSaved && !isGameFinished && (
-                <button onClick={handleChangeName}>Change Name</button>
-            )}
-        </div>
+                        <h3>Tidligere spill</h3>
+                        <ul>
+                            {scoreHistory.map((entry, index) => (
+                                <li key={index}>
+                                    Dato: {entry.date}, score: {entry.score} av {entry.total} mulige
+                                </li>
+                            ))}
+                        </ul>
+
+                        {isNameSaved && !isGameFinished && (
+                            <button onClick={() => setIsNameSaved(false)}>Bytt navn</button>
+                        )}
+                    </>
+                )}
+            </div>
+        </>
     );
 }
 

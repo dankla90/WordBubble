@@ -24,10 +24,9 @@ function Letter({ letter, isSelected, onClick, isDisabled }) {
     );
 }
 
-function GameBoard({ onGameEnd, possibleWords = [], letters = [], isDisabled }) {
-    const [guessedWords, setGuessedWords] = useState([]);
-    const [hasGivenUp, setHasGivenUp] = useState(false);
+function GameBoard({ onGameEnd, possibleWords = [], letters = [], isGameFinished, guessedWords, addGuessedWord }) {
     const [selectedLetters, setSelectedLetters] = useState([]);
+    const [hasGivenUp, setHasGivenUp] = useState(false);
     const [hasPlayedToday, setHasPlayedToday] = useState(false);
 
     // Ensure letters is not empty before accessing its elements
@@ -50,18 +49,18 @@ function GameBoard({ onGameEnd, possibleWords = [], letters = [], isDisabled }) 
     }, []);
 
     const addToGuessedWords = (guess) => {
-        setGuessedWords([...guessedWords, guess]);
-        if (letters.length > 0) setSelectedLetters([letters[0]]); // Reset selection
+        addGuessedWord(guess); // Use prop function to update guessed words in parent
+        setSelectedLetters([letters[0]]); // Reset selection
     };
 
     const handleGiveUp = () => {
         setHasGivenUp(true);
         setCookie('lastPlayedDate', new Date().toISOString().split('T')[0], 1); // Set today's date in cookie
-        onGameEnd(guessedWords.length); // Update score box when "Give Up" is pressed
+        onGameEnd(guessedWords.length); // Update score when "Give Up" is pressed
     };
 
     const handleLetterClick = (letter) => {
-        if (hasGivenUp || isDisabled || hasPlayedToday) return; // Prevent actions if disabled or game played today
+        if (hasGivenUp || isGameFinished || hasPlayedToday) return; // Prevent actions if disabled or game played today
 
         const newSelected = [...selectedLetters, letter];
         setSelectedLetters(newSelected);
@@ -79,8 +78,7 @@ function GameBoard({ onGameEnd, possibleWords = [], letters = [], isDisabled }) 
 
     return (
         <div className="game-board">
-            <h2>Daily Word Puzzle</h2>
-            <div>Use the letters:</div>
+            <div>Bruk bokstavene til å finne alle ordene</div>
             <div className="letter-display">
                 {letters.map((letter, index) => (
                     <Letter
@@ -88,13 +86,13 @@ function GameBoard({ onGameEnd, possibleWords = [], letters = [], isDisabled }) 
                         letter={letter}
                         isSelected={selectedLetters.includes(letter)}
                         onClick={handleLetterClick}
-                        isDisabled={isDisabled || hasPlayedToday} // Disable interaction if has played today
+                        isDisabled={isGameFinished || hasPlayedToday} // Disable interaction if game is finished or has played today
                     />
                 ))}
             </div>
 
             <div className="selected-letters">
-                <h3>Selected Letters:</h3>
+                <h3>Valgte bokstaver</h3>
                 <div className="selected-letters-display">
                     {selectedLetters.map((letter, index) => (
                         <span key={index} className="selected-letter">
@@ -104,32 +102,10 @@ function GameBoard({ onGameEnd, possibleWords = [], letters = [], isDisabled }) 
                 </div>
             </div>
 
-            <div>Total possible words: {possibleWords.length}</div>
+            <div>Mulige ord {possibleWords.length}</div>
 
-            <button onClick={handleGiveUp} disabled={hasGivenUp || isDisabled || hasPlayedToday}>Give Up</button>
-            <button onClick={handleUnselectAll} disabled={hasGivenUp || isDisabled || hasPlayedToday}>Unselect All</button>
-
-            <div className="guessed-words">
-                <h3>Guessed Words</h3>
-                {guessedWords.map((word, index) => (
-                    <div key={index}>{word}</div>
-                ))}
-            </div>
-
-            <div className="word-list">
-                <h3>Word List</h3>
-                {/* Display possible words regardless of game status */}
-                {hasGivenUp || isDisabled || hasPlayedToday ? (
-                    <div>
-                        <h4>All possible words:</h4>
-                        {possibleWords.map((word, index) => (
-                            <div key={index}>{word}</div>
-                        ))}
-                    </div>
-                ) : (
-                    <p>Keep guessing!</p>
-                )}
-            </div>
+            <button onClick={handleGiveUp} disabled={hasGivenUp || isGameFinished || hasPlayedToday}>Gi opp</button>
+            <button onClick={handleUnselectAll} disabled={hasGivenUp || isGameFinished || hasPlayedToday}>nullstill valgte bokstaver</button>
         </div>
     );
 }
