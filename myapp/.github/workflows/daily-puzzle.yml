@@ -1,11 +1,11 @@
-name: Generate Daily Puzzle
+name: Generate Daily Puzzle and Deploy
 
 on:
   schedule:
     - cron: "0 0 * * *"  # Runs every day at midnight UTC
 
 jobs:
-  generate:
+  generate-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -15,7 +15,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '16' # Ensure compatibility with your environment
 
       - name: Install dependencies
         run: npm install
@@ -23,12 +23,21 @@ jobs:
       - name: Generate daily puzzle
         run: node scripts/generateDailyPuzzle.js
 
-      - name: Commit and push changes
+      - name: Commit updated daily puzzle
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "dankla90"
+          git config --global user.email "bassboom@hotmail.com"
           git add public/dailyPuzzle.json
           git commit -m "Update daily puzzle"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build the project
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build # The directory to publish to GitHub Pages
