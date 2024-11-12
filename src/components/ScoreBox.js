@@ -1,16 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 function ScoreBox({ score, totalWords, playerName, scoreHistory, setPlayerName, isGameFinished }) {
     const [isMinimized, setIsMinimized] = useState(false); // Start minimized by default
     const [nameInput, setNameInput] = useState(playerName);
     const [isNameSaved, setIsNameSaved] = useState(!!playerName);
     const handleNameChange = (e) => setNameInput(e.target.value);
+
     const saveName = () => {
         setPlayerName(nameInput); 
         setIsNameSaved(true);
     };
 
-    const toggleScoreBox = () => setIsMinimized(!isMinimized);
+    // Memoize toggleScoreBox using useCallback
+    const toggleScoreBox = useCallback(() => {
+        setIsMinimized((prev) => !prev); // Toggle isMinimized state
+    }, []); // No dependencies, so this function will stay the same across renders
 
     const displayMessage = () => {
         if (score === totalWords) return `Kjempeflott, du klarte alle ${totalWords} ord!`;
@@ -23,9 +27,7 @@ function ScoreBox({ score, totalWords, playerName, scoreHistory, setPlayerName, 
         if (window.innerWidth < 768 && !isMinimized) {
             toggleScoreBox();
         }
-    }, []); 
-
-
+    }, [isMinimized, toggleScoreBox]); // Add dependencies
 
     return (
         <>
