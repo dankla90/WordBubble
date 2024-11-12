@@ -84,7 +84,7 @@ function GameBoard({ onGameEnd, possibleWords = [], letters = [], isGameFinished
 
     return (
         <div className="game-board">
-            <div>Bruk bokstavene til å finne alle ordene</div>
+            <div>Bruk bokstavene til å finne alle ordene, du må bruke bokstaven i midten minst en gang</div>
             <div className="letter-display">
                 {letters.map((letter, index) => (
                     <Letter

@@ -24,8 +24,7 @@
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest",
-      "@babel/plugin-transform-private-property-in-object"
+      "react-app/jest"
     ]
   },
   "browserslist": {
@@ -42,6 +41,7 @@
   },
   "devDependencies": {
     "@babel/plugin-transform-private-property-in-object": "^7.25.9",
+    "@babel/preset-react": "^7.25.9",
     "gh-pages": "^6.2.0"
   }
 }
