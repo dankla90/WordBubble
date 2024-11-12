@@ -20,8 +20,11 @@ async function getDailyLetters() {
             const validWords = filterWordsByLetters(words, startingLetter, selectedLetters);
             attempts++;
 
-            if (validWords.length >= 4 && validWords.length <= 30) {
-                return { letters: selectedLetters, words: validWords };
+            // Ensure every selected letter is used in at least one valid word
+            if (areAllLettersUsed(selectedLetters, validWords)) {
+                if (validWords.length >= 4 && validWords.length <= 30) {
+                    return { letters: selectedLetters, words: validWords };
+                }
             }
 
             if (validWords.length > 40) {
@@ -58,6 +61,18 @@ function filterWordsByLetters(words, startingLetter, selectedLetters) {
         // Ensure every letter in the word is from the selected set of letters
         [...word].every(letter => selectedLettersSet.has(letter))
     );
+}
+
+function areAllLettersUsed(selectedLetters, validWords) {
+    // Check if all selected letters are used in at least one valid word
+    for (const letter of selectedLetters) {
+        const isUsed = validWords.some(word => word.includes(letter));
+        if (!isUsed) {
+            console.log(`Letter '${letter}' is not used in any valid words.`);
+            return false; // If any letter is not used, return false
+        }
+    }
+    return true;
 }
 
 module.exports = getDailyLetters;

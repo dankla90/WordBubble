@@ -2,6 +2,9 @@
 import React from 'react';
 
 function WordDisplay({ guessedWords, possibleWords, hasGivenUp, hasPlayedToday }) {
+    // Filter out guessed words from possible words
+    const unguessedWords = possibleWords.filter(word => !guessedWords.includes(word));
+
     return (
         <div className="word-display">
             <h2>Riktige ord</h2>
@@ -11,12 +14,12 @@ function WordDisplay({ guessedWords, possibleWords, hasGivenUp, hasPlayedToday }
                 ))}
             </ul>
 
-            {/* Optionally, display possible words when the player has given up */}
+            {/* Display only unguessed possible words when the player has given up */}
             {hasGivenUp && (
                 <>
                     <h2>Mulige ord:</h2>
                     <ul>
-                        {possibleWords.map((word, index) => (
+                        {unguessedWords.map((word, index) => (
                             <li key={index}>{word}</li>
                         ))}
                     </ul>
