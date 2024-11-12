@@ -11,30 +11,31 @@ body {
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: auto;
 }
 
-/* Container for the game and score, set flex direction here */
+/* Game container with 1fr 2fr 1fr grid layout */
 .game-container {
-  display: flex;
-  flex-direction: column; /* Stack vertically by default for mobile */
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr; /* Three columns for desktop */
+  gap: 20px; /* Adds space between sections */
   width: 100%;
 }
 
 /* Letter display layout for hexagon effect */
 .letter-display {
   position: relative;
-  width: 200px; /* Adjust size as needed */
-  height: 200px; /* Adjust size as needed */
+  width: 200px;
+  height: 200px;
   margin: 20px auto;
 }
 
 /* Letter styling */
 .letter {
   position: absolute;
-  width: 40px; /* Size of the letters */
-  height: 40px; /* Size of the letters */
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -45,7 +46,7 @@ body {
 }
 
 .letter.selected {
-  background-color: yellow; /* Highlight selected letters */
+  background-color: yellow;
 }
 
 /* Positioning each letter to form a hexagon around the center */
@@ -53,9 +54,8 @@ body {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  background-color: blue; /* Color for the center letter */
+  background-color: blue;
   color: white;
-  border-radius: 10%; /* Hexagon effect */
 }
 
 .letter:nth-child(2) { /* Top left */
@@ -97,6 +97,7 @@ body {
 /* Game board styling */
 .game-board {
   text-align: center;
+  grid-column: 2 / 3; /* Middle column */
 }
 
 /* Selected letters display */
@@ -108,110 +109,91 @@ body {
 .selected-letters-display {
   display: flex;
   justify-content: center;
-  gap: 10px; /* Space between letters */
+  gap: 10px;
 }
 
 .selected-letter {
   padding: 10px;
-  border: 2px solid blue; /* Border to represent selected letters */
+  border: 2px solid blue;
   border-radius: 5px;
-  background-color: lightblue; /* Background color */
-  font-weight: bold; /* Make it stand out */
+  background-color: lightblue;
+  font-weight: bold;
 }
 
 /* Guessed Words section styling */
 .guessed-words {
   margin-top: 20px;
   text-align: center;
-  /* Additional styling for "Guessed Words" if needed */
 }
 
 /* Word List section styling */
-.word-list {
-  margin-top: 20px;
+.word-display {
   text-align: center;
-  /* Additional styling for "Word List" if needed */
 }
 
+/* Score Box */
 .score-box h2 {
-  display: inline-block; /* Keeps the h2 in-line */
-  margin-right: 10px; /* Adjust the margin to create space between the heading and the button */
+  display: inline-block;
+  margin-right: 10px;
 }
 
 .close-btn {
-  display: inline-block; /* Ensures the button stays in-line with the heading */
-  margin-left: 10px; /* Adds some space between the score text and the button */
-  cursor: pointer; /* Optional: changes the cursor to indicate it's clickable */
+  display: inline-block;
+  margin-left: 10px;
+  cursor: pointer;
 }
 
+/* Responsive Design */
 
-
-
-/* Responsive design */
-
-/* Desktop screens - Adjust layout to row */
+/* Desktop screens - Three-column grid layout */
 @media (min-width: 768px) {
   .game-container {
-    flex-direction: row; /* Stack horizontally on desktop */
-    justify-content: space-between;
+    grid-template-columns: 1fr 2fr 1fr; /* Three columns with fractions */
   }
 
+  /* Flex and alignment settings to space out columns */
   .score-box {
-    flex: 1;
+    grid-column: 1 / 2; /* First column */
     max-width: 300px;
-    margin-right: 20px;
+    text-align: center;
   }
 
   .game-board {
-    flex: 3;
-    max-width: 600px; /* Set a max-width for the game board */
-    margin-right: 20px;
+    grid-column: 2 / 3; /* Middle column */
+    max-width: 100%;
+    margin: 0 auto;
   }
 
-  .guessed-words {
-    flex: 1;
+  .word-display {
+    grid-column: 3 / 4; /* Last column */
     max-width: 300px;
-    margin-left: 20px;
     text-align: left;
   }
 
-  .word-list {
-    flex: 1;
-    max-width: 300px;
-    margin-left: 20px;
-    text-align: left;
-  }
   .close-btn {
-    display: none; /* Completely hides the button */
-}
-
-
+    display: none;
+  }
 }
 
 /* Mobile - Stack sections vertically */
 @media (max-width: 767px) {
   .game-container {
-    flex-direction: column; /* Stack items vertically on mobile */
-    align-items: center; /* Center the content */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
+  .score-box,
+  .game-board,
+  .guessed-words,
+  .word-display {
+    width: 100%;
+    max-width: 400px;
+    margin-top: 20px;
+    text-align: center;
+  }
+  .word-display,
   .score-box {
-    width: 100%;
-    max-width: 300px; /* Set a max width to avoid excessive stretching */
-    margin-top: 20px;
-    text-align: center;
-  }
-
-  .game-board {
-    width: 100%;
-    max-width: 100%; /* Take up full width */
-    margin-top: 20px;
-    text-align: center; /* Center text */
-  }
-
-  .guessed-words, .word-list {
-    width: 100%; /* Full width */
-    text-align: center;
-    margin-top: 20px; /* Space out sections */
+    max-width: 200px;
   }
 }

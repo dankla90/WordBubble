@@ -13,7 +13,7 @@ async function getDailyLetters() {
         console.log("Total words loaded:", words.length);
 
         let attempts = 0;
-        const maxAttempts = 50;
+        const maxAttempts = 100;
 
         while (attempts < maxAttempts) {
             const { startingLetter, selectedLetters } = selectUniqueLetters();
