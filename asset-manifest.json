@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/WordBubble/static/css/main.a00f80e6.css",
-    "main.js": "/WordBubble/static/js/main.6227e9ad.js",
+    "main.css": "/WordBubble/static/css/main.41dfc282.css",
+    "main.js": "/WordBubble/static/js/main.a1836c7a.js",
     "static/js/453.64512fd7.chunk.js": "/WordBubble/static/js/453.64512fd7.chunk.js",
     "index.html": "/WordBubble/index.html",
-    "main.a00f80e6.css.map": "/WordBubble/static/css/main.a00f80e6.css.map",
-    "main.6227e9ad.js.map": "/WordBubble/static/js/main.6227e9ad.js.map",
+    "main.41dfc282.css.map": "/WordBubble/static/css/main.41dfc282.css.map",
+    "main.a1836c7a.js.map": "/WordBubble/static/js/main.a1836c7a.js.map",
     "453.64512fd7.chunk.js.map": "/WordBubble/static/js/453.64512fd7.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.a00f80e6.css",
-    "static/js/main.6227e9ad.js"
+    "static/css/main.41dfc282.css",
+    "static/js/main.a1836c7a.js"
   ]
 }
