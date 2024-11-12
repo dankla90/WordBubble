@@ -28,7 +28,7 @@ jobs:
           git config --global user.name "dankla90"
           git config --global user.email "bassboom@hotmail.com"
           git pull
-          git add myapp/public/dailyLetters.json  # Correct path to the generated file
+          git add public/dailyLetters.json  # Correct path to the generated file
           git commit -m "Update daily puzzle"
           git push
         env:
