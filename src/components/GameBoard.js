@@ -108,7 +108,7 @@ function GameBoard({ onGameEnd, possibleWords = [], letters = [], isGameFinished
                 </div>
             </div>
 
-            <div>Mulige ord {possibleWords.length}</div>
+            <div>Mulige ord {possibleWords.length} Du har {guessedWords.length}</div>
 
             <button onClick={handleGiveUp} disabled={hasGivenUp || isGameFinished || hasPlayedToday}>Gi opp</button>
             <button onClick={handleUnselectAll} disabled={hasGivenUp || isGameFinished || hasPlayedToday}>nullstill valgte bokstaver</button>
