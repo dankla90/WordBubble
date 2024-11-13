@@ -4,6 +4,7 @@ function ScoreBox({ score, totalWords, playerName, scoreHistory, setPlayerName, 
     const [isMinimized, setIsMinimized] = useState(false); // Start minimized by default
     const [nameInput, setNameInput] = useState(playerName);
     const [isNameSaved, setIsNameSaved] = useState(!!playerName);
+    
     const handleNameChange = (e) => setNameInput(e.target.value);
 
     const saveName = () => {
@@ -14,7 +15,7 @@ function ScoreBox({ score, totalWords, playerName, scoreHistory, setPlayerName, 
     // Memoize toggleScoreBox using useCallback
     const toggleScoreBox = useCallback(() => {
         setIsMinimized((prev) => !prev); // Toggle isMinimized state
-    }, []); // No dependencies, so this function will stay the same across renders
+    }, []); // Empty dependency array to prevent re-creation on each render
 
     const displayMessage = () => {
         if (score === totalWords) return `Kjempeflott, du klarte alle ${totalWords} ord!`;
@@ -24,10 +25,10 @@ function ScoreBox({ score, totalWords, playerName, scoreHistory, setPlayerName, 
 
     useEffect(() => {
         // Run this only once on component mount
-        if (window.innerWidth < 768 && !isMinimized) {
-            toggleScoreBox();
+        if (window.innerWidth < 768) {
+            setIsMinimized(true); // Set minimized state for mobile by default
         }
-    }, [isMinimized, toggleScoreBox]); // Add dependencies
+    }, []); // Empty dependency array ensures this only runs on mount
 
     return (
         <>
