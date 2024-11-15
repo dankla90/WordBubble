@@ -127,6 +127,8 @@ function GameBoard({ onGameEnd, possibleWords = [], letters = [], isGameFinished
 
             <div className="selected-letters">
                 <h3>Valgte bokstaver</h3>
+                
+            <Button onClick={handleUndoLetter} disabled={hasGivenUp || isGameFinished || hasPlayedToday || selectedLetters.length === 0}>Angre bokstav</Button>
                 <div className="selected-letters-display">
                     {selectedLetters.map((letter, index) => (
                         <span key={index} className="selected-letter">
@@ -137,13 +139,13 @@ function GameBoard({ onGameEnd, possibleWords = [], letters = [], isGameFinished
             </div>
 
             <div>Mulige ord {possibleWords.length} Du har {guessedWords.length}</div>
-
-            <Button onClick={shuffleLetters} disabled={hasGivenUp || isGameFinished || hasPlayedToday || isShuffling}>
-                Stokk om bokstavene
-            </Button>
-            <Button onClick={handleGiveUp} disabled={hasGivenUp || isGameFinished || hasPlayedToday}>Gi opp</Button>
+            <div>
+            <Button onClick={shuffleLetters} disabled={hasGivenUp || isGameFinished || hasPlayedToday || isShuffling}>Stokk om bokstavene</Button>
             <Button onClick={handleUnselectAll} disabled={hasGivenUp || isGameFinished || hasPlayedToday}>nullstill valgte bokstaver</Button>
-            <Button onClick={handleUndoLetter} disabled={hasGivenUp || isGameFinished || hasPlayedToday || selectedLetters.length === 0}>Angre bokstav</Button>
+
+            </div>
+
+            <Button onClick={handleGiveUp} disabled={hasGivenUp || isGameFinished || hasPlayedToday}>Gi opp</Button>
         </div>
     );
 }

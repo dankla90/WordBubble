@@ -52,7 +52,7 @@ body {
 }
 
 .letter.selected {
-  background-color: yellow;
+  background-color: #dfbc41;
 }
 
 .letter.center {
@@ -60,6 +60,11 @@ body {
   color: white;
   animation: none; /* Disable animation */
   transform: none; /* Prevent transform changes */
+}
+
+.letter.center.selected {
+  transform: translate(-50%, -50%) scale(1.1); /* Makes the letter slightly larger */
+  box-shadow: 0 0 10px 5px rgba(255, 215, 0, 0.8); /* Adds a glowing effect */
 }
 
 /* Positioning letters in a hexagon layout */
