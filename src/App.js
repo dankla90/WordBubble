@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import GameBoard from './components/GameBoard';
 import ScoreBox from './components/ScoreBox';
+import {Button} from './components/styles/Button.styled'
 import WordDisplay from './components/WordDisplay';
 import './App.css';
 
@@ -140,7 +141,7 @@ function App() {
                     hasPlayedToday={hasPlayedToday}
                 />
             </div>
-            <button onClick={clearCookies}>Slett Cookies</button>
+            <Button onClick={clearCookies}>Slett Cookies</Button>
         </div>
     );
 }

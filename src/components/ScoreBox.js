@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import {Button} from './styles/Button.styled';
 
 function ScoreBox({ score, totalWords, playerName, scoreHistory, setPlayerName, isGameFinished }) {
     const [isMinimized, setIsMinimized] = useState(false); // Start minimized by default
@@ -44,7 +45,7 @@ function ScoreBox({ score, totalWords, playerName, scoreHistory, setPlayerName, 
                     <>
                         <div className="score-box-header">
                             <h2>Score</h2>
-                            <button className="close-btn" onClick={toggleScoreBox}>X</button>
+                            <Button className="close-btn" onClick={toggleScoreBox}>X</Button>
                         </div>
 
                         {isNameSaved ? (
@@ -57,7 +58,7 @@ function ScoreBox({ score, totalWords, playerName, scoreHistory, setPlayerName, 
                                     onChange={handleNameChange}
                                     placeholder="Skriv inn navnet ditt"
                                 />
-                                <button onClick={saveName}>Lagre Navn</button>
+                                <Button onClick={saveName}>Lagre Navn</Button>
                             </div>
                         )}
                         <h4>{displayMessage()}</h4>
@@ -72,7 +73,7 @@ function ScoreBox({ score, totalWords, playerName, scoreHistory, setPlayerName, 
                         </ul>
 
                         {isNameSaved && !isGameFinished && (
-                            <button onClick={() => setIsNameSaved(false)}>Bytt navn</button>
+                            <Button onClick={() => setIsNameSaved(false)}>Bytt navn</Button>
                         )}
                     </>
                 )}

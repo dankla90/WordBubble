@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {Button} from './styles/Button.styled';
 import '../App.css';
 
 function setCookie(name, value, days) {
@@ -109,7 +110,7 @@ function GameBoard({ onGameEnd, possibleWords = [], letters = [], isGameFinished
 
     return (
         <div className="game-board">
-            <div>Bruk bokstavene til å finne alle ordene, du må bruke bokstaven i midten minst en gang</div>
+            <div>Bruk bokstavene til å finne alle ordene, du må bruke bokstaven i midten minst en gang, ordene må være minst fire bokstaver.</div>
             <div className="letter-display">
             {displayOrder.map((letter, index) => (
                 <Letter
@@ -137,12 +138,12 @@ function GameBoard({ onGameEnd, possibleWords = [], letters = [], isGameFinished
 
             <div>Mulige ord {possibleWords.length} Du har {guessedWords.length}</div>
 
-            <button onClick={shuffleLetters} disabled={hasGivenUp || isGameFinished || hasPlayedToday || isShuffling}>
-                Shuffle Letters
-            </button>
-            <button onClick={handleGiveUp} disabled={hasGivenUp || isGameFinished || hasPlayedToday}>Gi opp</button>
-            <button onClick={handleUnselectAll} disabled={hasGivenUp || isGameFinished || hasPlayedToday}>nullstill valgte bokstaver</button>
-            <button onClick={handleUndoLetter} disabled={hasGivenUp || isGameFinished || hasPlayedToday || selectedLetters.length === 0}>Angre bokstav</button>
+            <Button onClick={shuffleLetters} disabled={hasGivenUp || isGameFinished || hasPlayedToday || isShuffling}>
+                Stokk om bokstavene
+            </Button>
+            <Button onClick={handleGiveUp} disabled={hasGivenUp || isGameFinished || hasPlayedToday}>Gi opp</Button>
+            <Button onClick={handleUnselectAll} disabled={hasGivenUp || isGameFinished || hasPlayedToday}>nullstill valgte bokstaver</Button>
+            <Button onClick={handleUndoLetter} disabled={hasGivenUp || isGameFinished || hasPlayedToday || selectedLetters.length === 0}>Angre bokstav</Button>
         </div>
     );
 }
