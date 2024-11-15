@@ -15,15 +15,21 @@ body {
   margin: auto;
 }
 
-/* Game container with 1fr 2fr 1fr grid layout */
+/* Game container layout */
 .game-container {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr; /* Three columns for desktop */
-  gap: 20px; /* Adds space between sections */
+  gap: 20px;
   width: 100%;
 }
 
-/* Letter display layout for hexagon effect */
+/* Game board styling */
+.game-board {
+  text-align: center;
+  grid-column: 2 / 3; /* Center column */
+}
+
+/* Letter display Her kan du stille hvor langt unna bokstavene er fra hverandre med å forrandre boksen. */ 
 .letter-display {
   position: relative;
   width: 200px;
@@ -34,76 +40,82 @@ body {
 /* Letter styling */
 .letter {
   position: absolute;
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: lightgray;
+  background-color: lightblue;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.5s ease-in-out;
 }
 
 .letter.selected {
   background-color: yellow;
 }
 
-/* Positioning each letter to form a hexagon around the center */
-.letter:nth-child(1) { /* Center letter */
+.letter.center {
+  background-color: blue;
+  color: white;
+  animation: none; /* Disable animation */
+  transform: none; /* Prevent transform changes */
+}
+
+/* Positioning letters in a hexagon layout */
+.letter:nth-child(1) { /* Center */
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  background-color: blue;
-  color: white;
 }
-
 .letter:nth-child(2) { /* Top left */
   top: 20%;
   left: 25%;
   transform: translate(-50%, -50%);
 }
-
 .letter:nth-child(3) { /* Top right */
   top: 20%;
   left: 75%;
   transform: translate(-50%, -50%);
 }
-
 .letter:nth-child(4) { /* Right */
   top: 50%;
   left: 90%;
   transform: translate(-50%, -50%);
 }
-
 .letter:nth-child(5) { /* Bottom right */
   top: 80%;
   left: 75%;
   transform: translate(-50%, -50%);
 }
-
 .letter:nth-child(6) { /* Bottom left */
   top: 80%;
   left: 25%;
   transform: translate(-50%, -50%);
 }
-
 .letter:nth-child(7) { /* Left */
   top: 50%;
   left: 10%;
   transform: translate(-50%, -50%);
 }
 
-/* Game board styling */
-.game-board {
-  text-align: center;
-  grid-column: 2 / 3; /* Middle column */
+.letter.shuffling {
+  transition: transform 0.5s ease-in-out; /* Adjust duration and easing as desired */
+  animation: shuffle 0.5s ease-in-out; /* Ensures smooth rotation while shuffling */
+}
+
+@keyframes shuffle {
+  from {
+     transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+     transform: translate(-50%, -50%) rotate(360deg);
+  }
 }
 
 /* Selected letters display */
 .selected-letters {
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin: 20px 0;
 }
 
 .selected-letters-display {
@@ -120,52 +132,18 @@ body {
   font-weight: bold;
 }
 
-/* Guessed Words section styling */
-.guessed-words {
-  margin-top: 20px;
-  text-align: center;
-}
-
-/* Word List section styling */
-.word-display {
-  text-align: center;
-}
-
-/* Score Box */
-.score-box h2 {
-  display: inline-block;
-  margin-right: 10px;
-}
-
-.close-btn {
-  display: inline-block;
-  margin-left: 10px;
-  cursor: pointer;
-}
-
 /* Responsive Design */
 
-/* Desktop screens - Three-column grid layout */
+/* Desktop screens */
 @media (min-width: 768px) {
-  .game-container {
-    grid-template-columns: 1fr 2fr 1fr; /* Three columns with fractions */
-  }
-
-  /* Flex and alignment settings to space out columns */
   .score-box {
-    grid-column: 1 / 2; /* First column */
+    grid-column: 1 / 2; /* Left column */
     max-width: 300px;
     text-align: center;
   }
 
-  .game-board {
-    grid-column: 2 / 3; /* Middle column */
-    max-width: 100%;
-    margin: 0 auto;
-  }
-
   .word-display {
-    grid-column: 3 / 4; /* Last column */
+    grid-column: 3 / 4; /* Right column */
     max-width: 300px;
     text-align: left;
   }
@@ -175,7 +153,7 @@ body {
   }
 }
 
-/* Mobile - Stack sections vertically */
+/* Mobile screens */
 @media (max-width: 767px) {
   .game-container {
     display: flex;
@@ -192,6 +170,7 @@ body {
     margin-top: 20px;
     text-align: center;
   }
+
   .word-display,
   .score-box {
     max-width: 200px;

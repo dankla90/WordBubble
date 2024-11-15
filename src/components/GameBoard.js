@@ -3,7 +3,7 @@ import '../App.css';
 
 function setCookie(name, value, days) {
     const date = new Date();
-    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // Cookie expiration time
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000); // Cookie expiration time
     document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
 }
 
@@ -12,22 +12,28 @@ function getCookie(name) {
     return match ? match[1] : null;
 }
 
-function Letter({ letter, isSelected, onClick, isDisabled }) {
+function Letter({ letter, isSelected, onClick, isDisabled, isCenter, isShuffling }) {
     return (
         <div
-            className={`letter ${isSelected ? 'selected' : ''}`}
-            onClick={() => !isDisabled && onClick(letter)} // Disable click if isDisabled
-            style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }} // Change cursor
+            className={`letter ${isSelected ? 'selected' : ''} ${isCenter ? 'center' : ''} ${isShuffling ? 'shuffling' : ''}`}
+            onClick={() => !isDisabled && onClick(letter)}
+            style={{
+                cursor: isDisabled ? 'not-allowed' : 'pointer',
+                animation: isCenter ? 'none' : undefined,
+            }}
         >
             {letter}
         </div>
     );
 }
 
+
 function GameBoard({ onGameEnd, possibleWords = [], letters = [], isGameFinished, guessedWords, addGuessedWord }) {
     const [selectedLetters, setSelectedLetters] = useState([]);
     const [hasGivenUp, setHasGivenUp] = useState(false);
     const [hasPlayedToday, setHasPlayedToday] = useState(false);
+    const [displayOrder, setDisplayOrder] = useState([...letters]);
+    const [isShuffling, setIsShuffling] = useState(false);
 
     // Check if the game has been played today using cookies
     useEffect(() => {
@@ -82,19 +88,40 @@ function GameBoard({ onGameEnd, possibleWords = [], letters = [], isGameFinished
         });
     };
 
+    const shuffleLetters = () => {
+        setIsShuffling(true);
+        setTimeout(() => {
+            const centerLetter = displayOrder[0]; // Keep the center letter fixed
+            const otherLetters = displayOrder.slice(1); // Exclude the center letter
+            
+            // Shuffle the other letters
+            for (let i = otherLetters.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [otherLetters[i], otherLetters[j]] = [otherLetters[j], otherLetters[i]];
+            }
+            
+            // Combine the center letter with shuffled other letters
+            setDisplayOrder([centerLetter, ...otherLetters]);
+            setIsShuffling(false);
+        }, 500); // Match animation duration
+    };
+    
+
     return (
         <div className="game-board">
             <div>Bruk bokstavene til å finne alle ordene, du må bruke bokstaven i midten minst en gang</div>
             <div className="letter-display">
-                {letters.map((letter, index) => (
-                    <Letter
-                        key={index}
-                        letter={letter}
-                        isSelected={selectedLetters.includes(letter)}
-                        onClick={handleLetterClick}
-                        isDisabled={isGameFinished || hasPlayedToday} // Disable interaction if game is finished or has played today
-                    />
-                ))}
+            {displayOrder.map((letter, index) => (
+                <Letter
+                    key={index}
+                    letter={letter}
+                    isSelected={selectedLetters.includes(letter)}
+                    onClick={handleLetterClick}
+                    isDisabled={isGameFinished || hasPlayedToday}
+                    isCenter={index === 0}
+                    isShuffling={isShuffling} // Pass the shuffling state
+                />
+            ))}
             </div>
 
             <div className="selected-letters">
@@ -110,6 +137,9 @@ function GameBoard({ onGameEnd, possibleWords = [], letters = [], isGameFinished
 
             <div>Mulige ord {possibleWords.length} Du har {guessedWords.length}</div>
 
+            <button onClick={shuffleLetters} disabled={hasGivenUp || isGameFinished || hasPlayedToday || isShuffling}>
+                Shuffle Letters
+            </button>
             <button onClick={handleGiveUp} disabled={hasGivenUp || isGameFinished || hasPlayedToday}>Gi opp</button>
             <button onClick={handleUnselectAll} disabled={hasGivenUp || isGameFinished || hasPlayedToday}>nullstill valgte bokstaver</button>
             <button onClick={handleUndoLetter} disabled={hasGivenUp || isGameFinished || hasPlayedToday || selectedLetters.length === 0}>Angre bokstav</button>
