@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import {Button} from './styles/Button.styled';
+import { Button } from './styles/Button.styled';
+import { isFanfareWorthy } from "../utils/FanfareChecker"; // Import the utility function.
+import Fanfare from "./Fanfare";
 import '../App.css';
 
 function setCookie(name, value, days) {
@@ -28,15 +30,14 @@ function Letter({ letter, isSelected, onClick, isDisabled, isCenter, isShuffling
     );
 }
 
-
 function GameBoard({ onGameEnd, possibleWords = [], letters = [], isGameFinished, guessedWords, addGuessedWord }) {
     const [selectedLetters, setSelectedLetters] = useState([]);
     const [hasGivenUp, setHasGivenUp] = useState(false);
     const [hasPlayedToday, setHasPlayedToday] = useState(false);
     const [displayOrder, setDisplayOrder] = useState([...letters]);
     const [isShuffling, setIsShuffling] = useState(false);
+    const [showFanfare, setShowFanfare] = useState(false);
 
-    // Check if the game has been played today using cookies
     useEffect(() => {
         const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
         const lastPlayedDate = getCookie('lastPlayedDate'); // Get date from cookie
@@ -51,6 +52,12 @@ function GameBoard({ onGameEnd, possibleWords = [], letters = [], isGameFinished
     const addToGuessedWords = (guess) => {
         addGuessedWord(guess); // Use prop function to update guessed words in parent
         setSelectedLetters([]); // Reset selection
+
+        // Check if the word is fanfare-worthy and trigger fanfare
+        if (isFanfareWorthy(guess, possibleWords)) {
+            setShowFanfare(true);
+            setTimeout(() => setShowFanfare(false), 3000); // Hide fanfare after 3 seconds
+        }
     };
 
     const handleGiveUp = () => {
@@ -67,7 +74,7 @@ function GameBoard({ onGameEnd, possibleWords = [], letters = [], isGameFinished
         setSelectedLetters(newSelected);
 
         const newGuess = newSelected.join('');
-        
+
         // Ensure the guess contains the center letter and matches the rules
         if (newGuess.includes(letters[0]) && possibleWords.includes(newGuess) && !guessedWords.includes(newGuess)) {
             addToGuessedWords(newGuess);
@@ -79,7 +86,6 @@ function GameBoard({ onGameEnd, possibleWords = [], letters = [], isGameFinished
         setSelectedLetters([]); // Unselect all letters
     };
 
-    // Undo the last selected letter
     const handleUndoLetter = () => {
         setSelectedLetters((prevSelectedLetters) => {
             // Remove the last selected letter
@@ -106,29 +112,29 @@ function GameBoard({ onGameEnd, possibleWords = [], letters = [], isGameFinished
             setIsShuffling(false);
         }, 500); // Match animation duration
     };
-    
 
     return (
         <div className="game-board">
+            {showFanfare && <Fanfare />}
             <div>Bruk bokstavene til å finne alle ordene, du må bruke bokstaven i midten minst en gang, ordene må være minst fire bokstaver.</div>
             <div className="letter-display">
-            {displayOrder.map((letter, index) => (
-                <Letter
-                    key={index}
-                    letter={letter}
-                    isSelected={selectedLetters.includes(letter)}
-                    onClick={handleLetterClick}
-                    isDisabled={isGameFinished || hasPlayedToday}
-                    isCenter={index === 0}
-                    isShuffling={isShuffling} // Pass the shuffling state
-                />
-            ))}
+                {displayOrder.map((letter, index) => (
+                    <Letter
+                        key={index}
+                        letter={letter}
+                        isSelected={selectedLetters.includes(letter)}
+                        onClick={handleLetterClick}
+                        isDisabled={isGameFinished || hasPlayedToday}
+                        isCenter={index === 0}
+                        isShuffling={isShuffling} // Pass the shuffling state
+                    />
+                ))}
             </div>
 
             <div className="selected-letters">
                 <h3>Valgte bokstaver</h3>
                 
-            <Button onClick={handleUndoLetter} disabled={hasGivenUp || isGameFinished || hasPlayedToday || selectedLetters.length === 0}>Angre bokstav</Button>
+                <Button onClick={handleUndoLetter} disabled={hasGivenUp || isGameFinished || hasPlayedToday || selectedLetters.length === 0}>Angre bokstav</Button>
                 <div className="selected-letters-display">
                     {selectedLetters.map((letter, index) => (
                         <span key={index} className="selected-letter">
@@ -140,9 +146,8 @@ function GameBoard({ onGameEnd, possibleWords = [], letters = [], isGameFinished
 
             <div>Mulige ord {possibleWords.length} Du har {guessedWords.length}</div>
             <div>
-            <Button onClick={shuffleLetters} disabled={hasGivenUp || isGameFinished || hasPlayedToday || isShuffling}>Stokk om bokstavene</Button>
-            <Button onClick={handleUnselectAll} disabled={hasGivenUp || isGameFinished || hasPlayedToday}>nullstill valgte bokstaver</Button>
-
+                <Button onClick={shuffleLetters} disabled={hasGivenUp || isGameFinished || hasPlayedToday || isShuffling}>Stokk om bokstavene</Button>
+                <Button onClick={handleUnselectAll} disabled={hasGivenUp || isGameFinished || hasPlayedToday}>nullstill valgte bokstaver</Button>
             </div>
 
             <Button onClick={handleGiveUp} disabled={hasGivenUp || isGameFinished || hasPlayedToday}>Gi opp</Button>
