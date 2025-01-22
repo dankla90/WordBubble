@@ -1,7 +1,7 @@
 const fs = require('fs').promises;
 const path = require('path');
 
-// Updated selectUniqueLetters function with letter frequency weights
+
 function selectUniqueLetters() {
     const alphabet = "abcdefghijklmnopqrstuvwxyz";
     const letterFrequencies = {
@@ -10,7 +10,6 @@ function selectUniqueLetters() {
         p: 1.9, b: 1.5, v: 1.0, k: 0.8, x: 0.2, q: 0.1, j: 0.1, z: 0.1
     };
 
-    // Create a weighted alphabet array
     const weightedAlphabet = alphabet.split('').flatMap(letter =>
         Array(Math.round(letterFrequencies[letter] * 10)).fill(letter)
     );
@@ -25,7 +24,7 @@ function selectUniqueLetters() {
     return { startingLetter, selectedLetters: Array.from(selectedLetters) };
 }
 
-// Original filterWordsByLetters function
+
 function filterWordsByLetters(words, startingLetter, selectedLetters) {
     const selectedLettersSet = new Set(selectedLetters);
 
@@ -45,7 +44,7 @@ function areAllLettersUsed(selectedLetters, validWords) {
     return true;
 }
 
-// Updated getDailyLetters function
+
 async function getDailyLetters() {
     try {
         console.log("Loading word list...");
